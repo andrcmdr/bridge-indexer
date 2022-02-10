@@ -1,0 +1,42 @@
+[package]
+name = "bridge-indexer"
+version = "0.1.0"
+authors = ["Aurora <hello@aurora.dev>"]
+edition = "2021"
+# rust-version = "1.58.1"
+description = "Bridge Indexer for Ranbow Bridge related transactions."
+homepage = "https://github.com/aurora-is-near/bridge.indexer"
+repository = "https://github.com/aurora-is-near/bridge.indexer"
+license = "GPLv3"
+# license-file = "LICENSE"
+publish = false
+
+[dependencies]
+borealis-producer-lib = { git = "https://github.com/aurora-is-near/borealis.rs", rev = "cd36bb172ee794108d34de1483287b2829ec42eb" }
+borealis-types = { git = "https://github.com/aurora-is-near/borealis.rs", rev = "cd36bb172ee794108d34de1483287b2829ec42eb" }
+
+nats = "0.16.0"
+
+clap = "3.0.0-beta.1"
+openssl-probe = "0.1.2"
+
+actix = "=0.11.0-beta.2"
+# tokio = { version = "1.1", features = ["sync"] }
+
+tracing = "0.1.13"
+tracing-subscriber = "0.2.4"
+
+# serde = { version = "1", features = [ "derive" ] }
+serde_json = "1.0.55"
+serde_cbor = "0.11.2"
+
+rand = "0.8.4"
+
+[dev-dependencies]
+
+[build-dependencies]
+
+[target]
+
+[features]
+

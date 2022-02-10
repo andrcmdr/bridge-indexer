@@ -1,0 +1,33 @@
+# Rust artifacts
+target/
+
+# NEAR State
+.near/data/
+
+# Borealis Indexer State
+.borealis-indexer/data/
+data/
+log/
+*/data.tar
+*/testnet/genesis.json
+*/testnet*/genesis.json
+*/betanet/genesis.json
+*/betanet*/genesis.json
+
+# NATS Creds
+# *.creds
+
+# Visual Studio Code
+.vscode/
+.run/
+
+# JetBrains IDEs
+.idea/
+.run/
+
+# Editor backup files
+*~
+
+# macOS
+.DS_Store
+
