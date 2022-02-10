@@ -12,8 +12,8 @@ license = "GPLv3"
 publish = false
 
 [dependencies]
-borealis-producer-lib = { git = "https://github.com/aurora-is-near/borealis.rs", rev = "cd36bb172ee794108d34de1483287b2829ec42eb" }
-borealis-types = { git = "https://github.com/aurora-is-near/borealis.rs", rev = "cd36bb172ee794108d34de1483287b2829ec42eb" }
+borealis-producer-lib = { git = "ssh://git@github.com/aurora-is-near/borealis.rs.git", rev = "cd36bb172ee794108d34de1483287b2829ec42eb" }
+borealis-types = { git = "ssh://git@github.com/aurora-is-near/borealis.rs.git", rev = "cd36bb172ee794108d34de1483287b2829ec42eb" }
 
 nats = "0.16.0"
 
