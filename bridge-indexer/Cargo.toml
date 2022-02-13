@@ -5,14 +5,15 @@ authors = ["Aurora <hello@aurora.dev>"]
 edition = "2021"
 # rust-version = "1.58.1"
 description = "Bridge Indexer for Ranbow Bridge related transactions."
-homepage = "https://github.com/aurora-is-near/bridge.indexer"
-repository = "https://github.com/aurora-is-near/bridge.indexer"
+homepage = "https://github.com/aurora-is-near/bridge-indexer"
+repository = "https://github.com/aurora-is-near/bridge-indexer"
 license = "GPLv3"
 # license-file = "LICENSE"
 publish = false
 
 [dependencies]
 borealis-producer-lib = { git = "ssh://git@github.com/aurora-is-near/borealis.rs.git", rev = "cd36bb172ee794108d34de1483287b2829ec42eb" }
+borealis-consumer-lib = { git = "ssh://git@github.com/aurora-is-near/borealis.rs.git", rev = "cd36bb172ee794108d34de1483287b2829ec42eb" }
 borealis-types = { git = "ssh://git@github.com/aurora-is-near/borealis.rs.git", rev = "cd36bb172ee794108d34de1483287b2829ec42eb" }
 
 nats = "0.16.0"
