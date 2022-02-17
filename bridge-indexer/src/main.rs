@@ -531,7 +531,7 @@ fn main() {
         SubCommand::Init(run_args) => {
             let nats_connection = nats_connect(run_args.to_owned());
 
-            // JetStreams cannot be created from NATS Client side, but this ability is still remain
+            // JetStreams cannot be created from NATS Client side due to restrictions on NATS server side, but this ability is still available for client side consumers
             let stream_info = nats_connection.create_stream(StreamConfig {
                 name: format!("{}_{}", run_args.subject, run_args.msg_format.to_string()),
                 discard: DiscardPolicy::Old,
@@ -546,11 +546,9 @@ fn main() {
                 deliver_subject: Some(format!("{}_{}", run_args.subject, run_args.msg_format.to_string())),
                 durable_name: Some(format!("Borealis_Consumer_{}_{}", run_args.subject, run_args.msg_format.to_string())),
                 deliver_policy: DeliverPolicy::Last,
-                ack_policy: AckPolicy::All,
+                ack_policy: AckPolicy::Explicit,
                 filter_subject: format!("{}_{}", run_args.subject, run_args.msg_format.to_string()),
                 replay_policy: ReplayPolicy::Instant,
-            //  opt_start_seq: i64,
-            //  opt_start_time: Option<DateTime>,
                 ..Default::default()
             }).expect("IO error, something went wrong while creating a new consumer, maybe consumer already exist");
 
@@ -599,11 +597,9 @@ fn main() {
                             deliver_subject: Some(format!("{}_{}", run_args.subject, run_args.msg_format.to_string())),
                             durable_name: Some(format!("Borealis_Consumer_{}_{}", run_args.subject, run_args.msg_format.to_string())),
                             deliver_policy: DeliverPolicy::Last,
-                            ack_policy: AckPolicy::All,
+                            ack_policy: AckPolicy::Explicit,
                             filter_subject: format!("{}_{}", run_args.subject, run_args.msg_format.to_string()),
                             replay_policy: ReplayPolicy::Instant,
-                        //  opt_start_seq: i64,
-                        //  opt_start_time: Option<DateTime>,
                             ..Default::default()
                         }).expect("IO error, something went wrong while creating a new consumer or returning an existent consumer");
 
