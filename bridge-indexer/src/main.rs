@@ -10,11 +10,50 @@ use nats::jetstream::{
 use borealis_types::prelude::{BorealisMessage, StreamerMessage};
 use serde_cbor as cbor;
 use serde_json;
+use serde::Serialize;
 use tracing::info;
+
+use borealis_producer_lib::prelude::{Context, Producer, MsgFormat as LibMsgFormat};
 
 pub mod configs;
 
-fn message_consumer(msg: nats::Message, msg_format: MsgFormat, verbosity_level: Option<VerbosityLevel>) {
+pub trait Runnable<T: Serialize> {
+    fn send(&self, msg_seq_id: u64, payload: &T, nats_connection: &nats::Connection);
+}
+
+impl<T> Runnable<T> for Context
+where T: Serialize {
+    fn send(&self, msg_seq_id: u64, payload: &T, nats_connection: &nats::Connection) {
+        let message = self.message_encode(msg_seq_id, payload);
+        self.message_publish(nats_connection, &message);
+    }
+}
+
+impl From<&RunArgs> for Context {
+    fn from(run_args: &RunArgs) -> Self {
+        Self {
+            root_cert_path: run_args.root_cert_path.to_owned(),
+            client_cert_path: run_args.client_cert_path.to_owned(),
+            client_private_key: run_args.client_private_key.to_owned(),
+            creds_path: run_args.creds_path.to_owned(),
+            nats_server: run_args.nats_server.to_owned(),
+            subject: run_args.subject.to_owned(),
+            msg_format: run_args.msg_format.into(),
+            ..Default::default()
+        }
+    }
+}
+
+impl From<MsgFormat> for LibMsgFormat {
+    fn from(msg_format: MsgFormat) -> Self {
+        match msg_format {
+            MsgFormat::Cbor => LibMsgFormat::Cbor,
+            MsgFormat::Json => LibMsgFormat::Json,
+        }
+    }
+}
+
+fn message_consumer(msg: nats::Message, run_args: &RunArgs, verbosity_level: Option<VerbosityLevel>, nats_connection: &nats::Connection) {
     /*
         Example of `StreamerMessage` with all data fields (filled with synthetic data, as an example):
 
@@ -254,7 +293,7 @@ fn message_consumer(msg: nats::Message, msg_format: MsgFormat, verbosity_level: 
     );
 
     // Decoding of Borealis Message receved from NATS subject
-    let borealis_message: BorealisMessage<StreamerMessage> = match msg_format {
+    let borealis_message: BorealisMessage<StreamerMessage> = match run_args.msg_format {
         MsgFormat::Cbor => BorealisMessage::from_cbor(msg.data.as_ref())
             .expect("[From CBOR bytes vector: message empty] Message decoding error"),
         MsgFormat::Json => BorealisMessage::from_json_bytes(msg.data.as_ref())
@@ -265,6 +304,8 @@ fn message_consumer(msg: nats::Message, msg_format: MsgFormat, verbosity_level: 
 
     // Data handling from `StreamerMessage` data structure. For custom filtering purposes.
     // Same as: jq '{block_height: .block.header.height, block_hash: .block.header.hash, block_header_chunk: .block.chunks[0], shard_chunk_header: .shards[0].chunk.header, transactions: .shards[0].chunk.transactions, receipts: .shards[0].chunk.receipts, receipt_execution_outcomes: .shards[0].receipt_execution_outcomes, state_changes: .state_changes}'
+
+    let context: Context = run_args.into();
 
     info!(
         target: "borealis_consumer",
@@ -343,6 +384,9 @@ fn message_consumer(msg: nats::Message, msg_format: MsgFormat, verbosity_level: 
                     "shard_chunk_transactions: {:?}\n",
                     cbor::to_vec(&chunk.transactions).unwrap()
                 );
+
+                context.send(streamer_message.block.header.height, &chunk.transactions, &nats_connection);
+            //  Context::send(&context, streamer_message.block.header.height, &chunk.transactions, &nats_connection);
 
                 println!("shard_chunk_receipts#: {}\n", chunk.receipts.len());
                 println!(
@@ -583,7 +627,7 @@ fn main() {
                             );
                             if let Ok(msg) = subscription.next_timeout(std::time::Duration::from_millis(10000)) {
                                 info!(target: "borealis_consumer", "Received message:\n{}", &msg);
-                                message_consumer(msg, run_args.msg_format, opts.verbose);
+                                message_consumer(msg, &run_args, opts.verbose, &nats_connection);
                             } else {
                                 info!(
                                     target: "borealis_consumer",
@@ -593,7 +637,7 @@ fn main() {
                         };
                     },
                     WorkMode::Jetstream => {
-                        let mut consumer = Consumer::create_or_open(nats_connection, format!("{}_{}", run_args.subject, run_args.msg_format.to_string()).as_str(), ConsumerConfig {
+                        let mut consumer = Consumer::create_or_open(nats_connection.to_owned(), format!("{}_{}", run_args.subject, run_args.msg_format.to_string()).as_str(), ConsumerConfig {
                             deliver_subject: Some(format!("{}_{}", run_args.subject, run_args.msg_format.to_string())),
                             durable_name: Some(format!("Borealis_Consumer_{}_{}", run_args.subject, run_args.msg_format.to_string())),
                             deliver_policy: DeliverPolicy::Last,
@@ -612,7 +656,7 @@ fn main() {
                                 info!(target: "borealis_consumer", "Received message:\n{}", msg);
                                 Ok(msg.to_owned())
                             }).expect("IO error, something went wrong while receiving a new message");
-                            message_consumer(message, run_args.msg_format, opts.verbose);
+                            message_consumer(message, &run_args, opts.verbose, &nats_connection);
                         };
                     },
                 }

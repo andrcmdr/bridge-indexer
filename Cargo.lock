@@ -558,9 +558,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "borealis-consumer-lib"
+version = "0.1.0"
+source = "git+ssh://git@github.com/aurora-is-near/borealis.rs.git?rev=8fa97511a31df3f7b0e78d89c7eda302eda261b0#8fa97511a31df3f7b0e78d89c7eda302eda261b0"
+dependencies = [
+ "actix",
+ "borealis-types",
+ "chrono",
+ "nats",
+ "near-indexer",
+ "rand 0.8.4",
+ "serde",
+ "serde_cbor",
+ "serde_json",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "borealis-producer-lib"
 version = "0.1.0"
-source = "git+ssh://git@github.com/aurora-is-near/borealis.rs.git?rev=cd36bb172ee794108d34de1483287b2829ec42eb#cd36bb172ee794108d34de1483287b2829ec42eb"
+source = "git+ssh://git@github.com/aurora-is-near/borealis.rs.git?rev=8fa97511a31df3f7b0e78d89c7eda302eda261b0#8fa97511a31df3f7b0e78d89c7eda302eda261b0"
 dependencies = [
  "actix",
  "anyhow",
@@ -582,7 +601,7 @@ dependencies = [
 [[package]]
 name = "borealis-types"
 version = "0.1.0"
-source = "git+ssh://git@github.com/aurora-is-near/borealis.rs.git?rev=cd36bb172ee794108d34de1483287b2829ec42eb#cd36bb172ee794108d34de1483287b2829ec42eb"
+source = "git+ssh://git@github.com/aurora-is-near/borealis.rs.git?rev=8fa97511a31df3f7b0e78d89c7eda302eda261b0#8fa97511a31df3f7b0e78d89c7eda302eda261b0"
 dependencies = [
  "near-primitives",
  "rand 0.8.4",
@@ -641,12 +660,14 @@ name = "bridge-indexer"
 version = "0.1.0"
 dependencies = [
  "actix",
+ "borealis-consumer-lib",
  "borealis-producer-lib",
  "borealis-types",
  "clap",
  "nats",
  "openssl-probe",
  "rand 0.8.4",
+ "serde",
  "serde_cbor",
  "serde_json",
  "tracing",
@@ -2424,7 +2445,7 @@ dependencies = [
 [[package]]
 name = "near-indexer"
 version = "0.0.0"
-source = "git+ssh://git@github.com/aurora-is-near/borealis.rs.git?rev=cd36bb172ee794108d34de1483287b2829ec42eb#cd36bb172ee794108d34de1483287b2829ec42eb"
+source = "git+ssh://git@github.com/aurora-is-near/borealis-indexer.git?rev=0b0a3dbe457bdf750813c8aa01045c448d4c4687#0b0a3dbe457bdf750813c8aa01045c448d4c4687"
 dependencies = [
  "actix",
  "anyhow",

@@ -12,9 +12,9 @@ license = "GPLv3"
 publish = false
 
 [dependencies]
-borealis-producer-lib = { git = "ssh://git@github.com/aurora-is-near/borealis.rs.git", rev = "cd36bb172ee794108d34de1483287b2829ec42eb" }
-borealis-consumer-lib = { git = "ssh://git@github.com/aurora-is-near/borealis.rs.git", rev = "cd36bb172ee794108d34de1483287b2829ec42eb" }
-borealis-types = { git = "ssh://git@github.com/aurora-is-near/borealis.rs.git", rev = "cd36bb172ee794108d34de1483287b2829ec42eb" }
+borealis-producer-lib = { git = "ssh://git@github.com/aurora-is-near/borealis.rs.git", rev = "8fa97511a31df3f7b0e78d89c7eda302eda261b0" }
+borealis-consumer-lib = { git = "ssh://git@github.com/aurora-is-near/borealis.rs.git", rev = "8fa97511a31df3f7b0e78d89c7eda302eda261b0" }
+borealis-types = { git = "ssh://git@github.com/aurora-is-near/borealis.rs.git", rev = "8fa97511a31df3f7b0e78d89c7eda302eda261b0" }
 
 nats = "0.16.0"
 
@@ -27,7 +27,7 @@ actix = "=0.11.0-beta.2"
 tracing = "0.1.13"
 tracing-subscriber = "0.2.4"
 
-# serde = { version = "1", features = [ "derive" ] }
+serde = { version = "1", features = [ "derive" ] }
 serde_json = "1.0.55"
 serde_cbor = "0.11.2"
 
