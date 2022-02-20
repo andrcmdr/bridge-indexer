@@ -9,9 +9,9 @@ set -f
 
 echo -e "\n";
 
-# time /bin/time -v env RUST_BACKTRACE=1 ./bridge-indexer run --root-cert-path ./.nats/seed/root-ca.crt --creds-path ./.nats/seed/nats.creds --nats-server "tls://westcoast.nats.backend.aurora.dev:4222,tls://eastcoast.nats.backend.aurora.dev:4222" --work-mode "subscriber" --subject "BlockIndex_StreamerMessages_mainnet" --msg-format "CBOR" >> ./log/bridge-indexer.debug.log 2>&1 & disown;
-# time /bin/time -v env RUST_BACKTRACE=1 ./bridge-indexer run --root-cert-path ./.nats/seed/root-ca.crt --creds-path ./.nats/seed/nats.creds --nats-server "tls://westcoast.nats.backend.aurora.dev:4222,tls://eastcoast.nats.backend.aurora.dev:4222" --work-mode "subscriber" --subject "BlockIndex_StreamerMessages_mainnet" --msg-format "CBOR" 2>&1 | tee -a ./log/bridge-indexer.debug.log & disown;
-time /bin/time -v env RUST_BACKTRACE=1 ./bridge-indexer run --root-cert-path ./.nats/seed/root-ca.crt --creds-path ./.nats/seed/nats.creds --nats-server "tls://westcoast.nats.backend.aurora.dev:4222,tls://eastcoast.nats.backend.aurora.dev:4222" --work-mode "subscriber" --subject "BlockIndex_StreamerMessages_mainnet" --msg-format "CBOR"
+# time /bin/time -v env RUST_BACKTRACE=1 ./bridge-indexer run --root-cert-path ./.nats/seed/root-ca.crt --creds-path ./.nats/seed/nats.creds --nats-server "tls://eastcoast.nats.backend.aurora.dev:4222,tls://westcoast.nats.backend.aurora.dev:4222" --work-mode "subscriber" --rx-subject "BlockIndex_StreamerMessages_mainnet" --tx-subject "BridgeIndex_BridgeMessages_mainnet" --msg-format "CBOR" >> ./log/bridge-indexer.debug.log 2>&1 & disown;
+# time /bin/time -v env RUST_BACKTRACE=1 ./bridge-indexer run --root-cert-path ./.nats/seed/root-ca.crt --creds-path ./.nats/seed/nats.creds --nats-server "tls://eastcoast.nats.backend.aurora.dev:4222,tls://westcoast.nats.backend.aurora.dev:4222" --work-mode "subscriber" --rx-subject "BlockIndex_StreamerMessages_mainnet" --tx-subject "BridgeIndex_BridgeMessages_mainnet" --msg-format "CBOR" 2>&1 | tee -a ./log/bridge-indexer.debug.log & disown;
+time /bin/time -v env RUST_BACKTRACE=1 ./bridge-indexer run --root-cert-path ./.nats/seed/root-ca.crt --creds-path ./.nats/seed/nats.creds --nats-server "tls://eastcoast.nats.backend.aurora.dev:4222,tls://westcoast.nats.backend.aurora.dev:4222" --work-mode "subscriber" --rx-subject "BlockIndex_StreamerMessages_mainnet" --tx-subject "BridgeIndex_BridgeMessages_mainnet" --msg-format "CBOR"
 
 echo -e "\n";
 

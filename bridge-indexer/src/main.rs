@@ -37,7 +37,7 @@ impl From<&RunArgs> for Context {
             client_private_key: run_args.client_private_key.to_owned(),
             creds_path: run_args.creds_path.to_owned(),
             nats_server: run_args.nats_server.to_owned(),
-            subject: run_args.subject.to_owned(),
+            subject: run_args.tx_subject.to_owned(),
             msg_format: run_args.msg_format.into(),
             ..Default::default()
         }
@@ -577,21 +577,21 @@ fn main() {
 
             // JetStreams cannot be created from NATS Client side due to restrictions on NATS server side, but this ability is still available for client side consumers
             let stream_info = nats_connection.create_stream(StreamConfig {
-                name: format!("{}_{}", run_args.subject, run_args.msg_format.to_string()),
+                name: format!("{}_{}", run_args.rx_subject, run_args.msg_format.to_string()),
                 discard: DiscardPolicy::Old,
-                subjects: Some(vec![format!("{}_{}", run_args.subject, run_args.msg_format.to_string())]),
+                subjects: Some(vec![format!("{}_{}", run_args.rx_subject, run_args.msg_format.to_string())]),
                 duplicate_window: 86400,
                 retention: RetentionPolicy::Limits,
                 storage: StorageType::File,
                 ..Default::default()
             }).expect("IO error, something went wrong while creating a new stream, maybe stream already exist");
 
-            let consumer = nats_connection.create_consumer(format!("{}_{}", run_args.subject, run_args.msg_format.to_string()).as_str(), ConsumerConfig {
-                deliver_subject: Some(format!("{}_{}", run_args.subject, run_args.msg_format.to_string())),
-                durable_name: Some(format!("Borealis_Consumer_{}_{}", run_args.subject, run_args.msg_format.to_string())),
+            let consumer = nats_connection.create_consumer(format!("{}_{}", run_args.rx_subject, run_args.msg_format.to_string()).as_str(), ConsumerConfig {
+                deliver_subject: Some(format!("{}_{}", run_args.rx_subject, run_args.msg_format.to_string())),
+                durable_name: Some(format!("Borealis_Consumer_{}_{}", run_args.rx_subject, run_args.msg_format.to_string())),
                 deliver_policy: DeliverPolicy::Last,
                 ack_policy: AckPolicy::Explicit,
-                filter_subject: format!("{}_{}", run_args.subject, run_args.msg_format.to_string()),
+                filter_subject: format!("{}_{}", run_args.rx_subject, run_args.msg_format.to_string()),
                 replay_policy: ReplayPolicy::Instant,
                 ..Default::default()
             }).expect("IO error, something went wrong while creating a new consumer, maybe consumer already exist");
@@ -615,10 +615,10 @@ fn main() {
                     WorkMode::Subscriber => {
                         let subscription = nats_connection
                             .subscribe(
-                                format!("{}_{}", run_args.subject, run_args.msg_format.to_string()).as_str(),
+                                format!("{}_{}", run_args.rx_subject, run_args.msg_format.to_string()).as_str(),
                             )
                             .expect(
-                                "Subscription error: maybe wrong or nonexistent `--subject` name",
+                                "Subscription error: maybe wrong or nonexistent `--rx-subject` name",
                             );
                         loop {
                             info!(
@@ -637,12 +637,12 @@ fn main() {
                         };
                     },
                     WorkMode::Jetstream => {
-                        let mut consumer = Consumer::create_or_open(nats_connection.to_owned(), format!("{}_{}", run_args.subject, run_args.msg_format.to_string()).as_str(), ConsumerConfig {
-                            deliver_subject: Some(format!("{}_{}", run_args.subject, run_args.msg_format.to_string())),
-                            durable_name: Some(format!("Borealis_Consumer_{}_{}", run_args.subject, run_args.msg_format.to_string())),
+                        let mut consumer = Consumer::create_or_open(nats_connection.to_owned(), format!("{}_{}", run_args.rx_subject, run_args.msg_format.to_string()).as_str(), ConsumerConfig {
+                            deliver_subject: Some(format!("{}_{}", run_args.rx_subject, run_args.msg_format.to_string())),
+                            durable_name: Some(format!("Borealis_Consumer_{}_{}", run_args.rx_subject, run_args.msg_format.to_string())),
                             deliver_policy: DeliverPolicy::Last,
                             ack_policy: AckPolicy::Explicit,
-                            filter_subject: format!("{}_{}", run_args.subject, run_args.msg_format.to_string()),
+                            filter_subject: format!("{}_{}", run_args.rx_subject, run_args.msg_format.to_string()),
                             replay_policy: ReplayPolicy::Instant,
                             ..Default::default()
                         }).expect("IO error, something went wrong while creating a new consumer or returning an existent consumer");

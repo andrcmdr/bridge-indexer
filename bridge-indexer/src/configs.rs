@@ -57,8 +57,11 @@ pub(crate) struct RunArgs {
     pub work_mode: WorkMode,
     /// Consumer subject, for subscription and to take messages from
     #[clap(long, default_value = "BlockIndex_StreamerMessages")]
-    pub subject: String,
-    /// Consuming messages format (`CBOR` or `JSON`), suffix for subject name
+    pub rx_subject: String,
+    /// Stream messages to subject
+    #[clap(long, default_value = "BridgeIndex_BridgeMessages")]
+    pub tx_subject: String,
+    /// Consuming and Streaming messages format (`CBOR` or `JSON`), suffix for subject name
     #[clap(long, default_value = "CBOR")]
     pub msg_format: MsgFormat,
 }
