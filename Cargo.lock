@@ -560,7 +560,7 @@ dependencies = [
 [[package]]
 name = "borealis-consumer-lib"
 version = "0.1.0"
-source = "git+ssh://git@github.com/aurora-is-near/borealis.rs.git?rev=943f28845015fa013b2947353af3a44b9aeb16a7#943f28845015fa013b2947353af3a44b9aeb16a7"
+source = "git+ssh://git@github.com/aurora-is-near/borealis.rs.git?rev=47f5209c3ac9e83b9383413e386d0dc414edb49f#47f5209c3ac9e83b9383413e386d0dc414edb49f"
 dependencies = [
  "actix",
  "borealis-types",
@@ -578,7 +578,7 @@ dependencies = [
 [[package]]
 name = "borealis-producer-lib"
 version = "0.1.0"
-source = "git+ssh://git@github.com/aurora-is-near/borealis.rs.git?rev=943f28845015fa013b2947353af3a44b9aeb16a7#943f28845015fa013b2947353af3a44b9aeb16a7"
+source = "git+ssh://git@github.com/aurora-is-near/borealis.rs.git?rev=47f5209c3ac9e83b9383413e386d0dc414edb49f#47f5209c3ac9e83b9383413e386d0dc414edb49f"
 dependencies = [
  "actix",
  "anyhow",
@@ -600,7 +600,7 @@ dependencies = [
 [[package]]
 name = "borealis-types"
 version = "0.1.0"
-source = "git+ssh://git@github.com/aurora-is-near/borealis.rs.git?rev=943f28845015fa013b2947353af3a44b9aeb16a7#943f28845015fa013b2947353af3a44b9aeb16a7"
+source = "git+ssh://git@github.com/aurora-is-near/borealis.rs.git?rev=47f5209c3ac9e83b9383413e386d0dc414edb49f#47f5209c3ac9e83b9383413e386d0dc414edb49f"
 dependencies = [
  "near-primitives",
  "rand 0.8.4",
